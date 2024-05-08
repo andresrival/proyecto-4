@@ -1,0 +1,88 @@
+def string_to_matrix(laberinto):
+    # Dividir el laberinto por filas
+    filas = laberinto.strip().split("\n")
+    
+    # Crear una matriz vacía
+    matriz = []
+    
+    # Iterar sobre cada fila y convertirla en una lista de caracteres
+    for fila in filas:
+        matriz.append(list(fila))
+    
+    return matriz
+import os
+
+def limpiar_y_mostrar(matriz):
+    # Limpiar la pantalla
+    os.system('cls' if os.name == 'nt' else 'clear')
+    
+    # Mostrar la matriz
+    for fila in matriz:
+        print("".join(fila))
+def main_loop(mapa, inicio, fin):
+    px, py = inicio  # Coordenadas iniciales del jugador
+
+    while (px, py) != fin:
+        # Asignar el caracter P a las coordenadas actuales del jugador en el mapa
+        mapa[px][py] = "P"
+
+        # Limpiar la pantalla y mostrar el laberinto con la posición actual del jugador
+        limpiar_y_mostrar(mapa)
+
+        # Leer la entrada del usuario para mover al jugador
+        movimiento = input("Ingresa la dirección (WASD): ").upper()
+
+        # Calcular las nuevas coordenadas tentativas
+        nueva_px, nueva_py = px, py
+        if movimiento == "W":
+            nueva_px -= 1
+        elif movimiento == "A":
+            nueva_py -= 1
+        elif movimiento == "S":
+            nueva_px += 1
+        elif movimiento == "D":
+            nueva_py += 1
+
+        # Verificar si la nueva posición es válida
+        if 0 <= nueva_px < len(mapa) and 0 <= nueva_py < len(mapa[0]) and mapa[nueva_px][nueva_py] != "#":
+            # Restaurar el punto anterior en el mapa
+            mapa[px][py] = "."
+
+            # Actualizar las coordenadas del jugador
+            px, py = nueva_px, nueva_py
+
+    # Limpiar la pantalla y mostrar el laberinto con la posición final del jugador
+    limpiar_y_mostrar(mapa)
+    print("¡Felicidades, has llegado al final del laberinto!")
+
+# Mapa del laberinto y coordenadas iniciales y finales
+laberinto = """..###################
+....#...............#
+#.#.#####.#########.#
+#.#...........#.#.#.#
+#.#####.#.###.#.#.#.#
+#...#.#.#.#.....#...#
+#.#.#.#######.#.#####
+#.#...#.....#.#...#.#
+#####.#####.#.#.###.#
+#.#.#.#.......#...#.#
+#.#.#.#######.#####.#
+#...#...#...#.#.#...#
+###.#.#####.#.#.###.#
+#.#...#.......#.....#
+#.#.#.###.#.#.###.#.#
+#...#.#...#.#.....#.#
+###.#######.###.###.#
+#.#.#.#.#.#...#.#...#
+#.#.#.#.#.#.#.#.#.#.#
+#.....#.....#.#.#.#.#
+###################.."""
+
+inicio = (0, 0)
+fin = (len(laberinto)-1, len(laberinto[0])-1)
+
+# Convertir el laberinto a matriz de caracteres
+mapa = string_to_matrix(laberinto)
+
+# Iniciar el bucle principal
+main_loop(mapa, inicio, fin)
